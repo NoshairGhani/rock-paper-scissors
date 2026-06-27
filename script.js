@@ -13,9 +13,23 @@ function getComputerChoice() {
     }
 }
 
-function getHumanChoice() {
-    let choice = prompt("Rock, Paper or Scissors?");
-    return choice.toLowerCase();
+function getHumanChoice(event) {
+    let currentButton = event.target.closest("#button-rock, #button-paper, #button-scissors");
+    if (currentButton === null) { return; }
+    switch (currentButton.id) {
+        case "button-rock":
+            console.log("rock press");
+            playRound("rock", getComputerChoice());
+            break;
+        case "button-paper":
+            playRound("paper", getComputerChoice());
+            break;
+        case "button-scissors":
+            playRound("scissors", getComputerChoice());
+            break;
+        default:
+            return;
+    }
 }
 
 //scores
@@ -24,6 +38,15 @@ let computerScore = 0;
 
 //single round logic
 function playRound(humanChoice, computerChoice) {
+    if (humanScore == 5) {
+        createText("You Won!");
+        return;
+    }
+    else if (computerScore == 5) {
+        createText("You Lost!")
+        return;
+    }
+
     let result = "";
     switch (humanChoice) {
         case "rock":
@@ -73,23 +96,14 @@ function playRound(humanChoice, computerChoice) {
             break;
     }
     console.log(result);
+    createText(result);
 }
 
-function playGame() {
-    //5 rounds 
-    for (let i=0; i < 5; i++) {
-        playRound(getHumanChoice(),getComputerChoice());
-    }
-
-    if (humanScore>computerScore) {
-        console.log("You Won!");
-    }
-    else if (humanScore<computerScore) {
-        console.log("You Lost!");
-    }
-    else if (humanScore==computerScore) {
-        console.log("It's a Tie!");
-    }
+function createText(text) {
+    let resultBox = document.querySelector(".result")
+    resultBox.textContent = text;
 }
 
-// playGame();
+//DOM
+let buttonSelected = document.querySelector(".buttons");
+buttonSelected.addEventListener("click", getHumanChoice);
